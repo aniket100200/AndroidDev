@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+<!--    <TextView-->
+<!--        android:id="@+id/txtAnim"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="BGMI"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textSize="34sp"-->
+<!--        android:textColor="#0091EA"-->
+<!--        />-->
+
+
+
+<!--    <RelativeLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginBottom="25dp"-->
+<!--        >-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_marginBottom="50dp"-->
+<!--            >-->
+
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/btnTranslate"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="@string/translate" />-->
+
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:id="@+id/btnAlpha"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="@string/alpha" />-->
+
+<!--        </LinearLayout>-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="50dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            >-->
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/rotate"-->
+<!--                android:id="@+id/btnRotate"/>-->
+
+<!--            <androidx.appcompat.widget.AppCompatButton-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="@string/scale"-->
+<!--                android:id="@+id/btnScale"/>-->
+<!--        </LinearLayout>-->
+<!--    </RelativeLayout>-->
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_anim1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:lottie_rawRes="@raw/liquid_loader"
+        />
+
+</RelativeLayout>

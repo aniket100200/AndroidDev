@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ListExample</string>
+    <string name="id_proof">Select an Id Proof</string>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="game_bg">#F5F6F8</color>
+    <color name="game_red">#B52621</color>
+    <color name="game_text_dark">#4A4A4A</color>
+    <color name="game_text_light">#8C8C8C</color>
+    <color name="nav_bg">#F4F0F0</color>
+    <color name="active_player_indicator">#4CAF50</color>
+    <color name="ludo_red">#D13639</color>
+    <color name="ludo_green">#1E7B44</color>
+    <color name="ludo_yellow">#E8AE23</color>
+    <color name="ludo_blue">#1B6CA8</color>
+    <color name="screen_bg">#F6F8FC</color>
+    <color name="white">#FFF</color>
+
+    <color name="board_outer_border">#D9E6F5</color>
+
+    <color name="board_path_bg">#FFFFFF</color>
+
+    <color name="board_grid_lines">#E5D9D5</color>
+
+    <color name="action_red_dark">#B32722</color>
+
+    <color name="bottom_nav_bg">#F4F0EE</color>
+
+    <color name="text_dark_brown">#5C4D46</color>
+
+    <color name="text_muted_grey">#8A8A8A</color>
+
+    <color name="active_player_dot">#4ADE80</color>
+</resources>

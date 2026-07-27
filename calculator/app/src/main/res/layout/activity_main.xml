@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#A07070"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+    <!--<ImageView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/aniket_pass"
+        android:contentDescription="@string/app_about"
+        android:scaleType="fitXY"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/about_us"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="12"
+        android:inputType="text"
+        android:layout_margin="11dp"
+        android:hint="@string/hint_name"
+
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:textColor="@color/blue"
+        />
+-->
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="384dp"
+        android:layout_height="412dp"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/aniket_pass" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="11dp"
+        android:text="@string/about_us"
+        android:textColorLink="#232121"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editTextPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/hint_name"
+        android:inputType="text|textEmailAddress" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="login"
+        android:textColorLink="#AD6E6E" />
+</LinearLayout>

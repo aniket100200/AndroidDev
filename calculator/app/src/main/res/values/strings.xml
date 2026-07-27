@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">calculator</string>
+    <string name="app_about">I\' am Aniket</string>
+    <string name="about_us">Hello My Name is Aniket and I\'m a software Developer and currently learning Android development
+    Now.</string>
+    <string name="hint_name">Enter Your Name</string>
+     <string name="login">Log In</string>
+</resources>

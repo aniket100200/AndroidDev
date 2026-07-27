@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+            <!-- Customize Your Theme Here -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/love</item>
+    </style>
+
+    <style name="MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
+            <!-- Customize Your Theme Here -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/love</item>
+    </style>
+    
+    <style name="MyButton">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFD600</item>
+    </style>
+
+    <style name="MyTextStyle">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFD600</item>
+    </style>
+</resources>
