@@ -7,14 +7,31 @@
     tools:context=".HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Home"
-        android:gravity="center"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        android:textColor="#FFF"
-        />
+        android:gravity="center_horizontal"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:gravity="center"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:textColor="#FFF"
+            android:id="@+id/homeName"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="#FFF"
+            android:id="@+id/homeDescription"
+            />
+    </LinearLayout>
 
 </FrameLayout>
