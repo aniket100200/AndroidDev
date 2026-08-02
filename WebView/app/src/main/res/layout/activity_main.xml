@@ -22,4 +22,12 @@
        android:layout_centerInParent="true"
       />
 
+   <!-- ADD THIS: Container for full-screen video -->
+   <FrameLayout
+       android:id="@+id/fullScreenContainer"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:visibility="gone"
+       android:background="#000000" />
+
 </RelativeLayout>
