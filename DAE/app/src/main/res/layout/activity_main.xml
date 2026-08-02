@@ -5,11 +5,24 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello"
+        android:id="@+id/title"
+        />
 
-<!--    <ListView-->
-<!--        android:id="@+id/listView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"/>-->
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="14dp"
+        android:maxHeight="500dp"
+        android:maxWidth="700dp"
+        android:id="@+id/dpImage"
+        android:src="@color/material_dynamic_secondary80"/>
+
+
 
 </LinearLayout>
