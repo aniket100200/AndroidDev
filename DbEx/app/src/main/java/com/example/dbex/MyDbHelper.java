@@ -2,10 +2,14 @@ package com.example.dbex;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.dbex.model.Contact;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MyDbHelper extends SQLiteOpenHelper {
 
@@ -45,7 +49,55 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
         db.insert(TABLE,null,values);
 
-//        db.close();
+        db.close();
+    }
+
+
+    public List<Contact> fetchContacts(){
+        SQLiteDatabase db= this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM "+TABLE,null);
+
+        List<Contact>contacts=new ArrayList<>();
+
+        while (cursor.moveToNext()){
+            Contact contact=new Contact();
+            contact.setId(cursor.getInt(0));
+            contact.setName(cursor.getString(1));
+            contact.setPhoneNo(cursor.getString(2));
+            contacts.add(contact);
+        }
+
+        db.close();
+
+
+
+        return contacts;
+    }
+
+
+    public void update(Contact contact){
+        SQLiteDatabase db=getWritableDatabase();
+
+        ContentValues contentValues=new ContentValues();
+        if(contact.getName()!=null){
+            contentValues.put(KEY_NAME,contact.getName());
+        }
+
+        if(contact.getPhoneNo()!=null){
+            contentValues.put(KEY_PHONE_NO,contact.getPhoneNo());
+        }
+
+        db.update(TABLE,contentValues,KEY_ID+" = "+contact.getId(),null);
+        db.close();
+    }
+
+
+    public void deleteById(int id){
+        SQLiteDatabase db=getWritableDatabase();
+        String ids[]=new String[1];
+        ids[0]=String.valueOf(id);
+        db.delete(TABLE,KEY_ID+" = ? ",ids);
     }
 
 
