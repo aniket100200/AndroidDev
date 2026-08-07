@@ -1,9 +1,12 @@
 package com.example.audioplayer;
 
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,66 +30,87 @@ public class MainActivity extends AppCompatActivity {
 
     TextView songTitle;
 
+    private final String CACHE_CURRENT_SONG="current_song";
+    private final String CURRENT_SONG="current_song_no";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        btnPrevious = findViewById(R.id.btnPause);
-        btnPlay = findViewById(R.id.btnPlay);
-        btnNext = findViewById(R.id.btnStop);
-        songTitle = findViewById(R.id.txtTitle);
-        progressLoader = findViewById(R.id.progressLoader); // Initialize this
+        new Handler().postDelayed(()->{
+            SharedPreferences pref = getSharedPreferences(CACHE_CURRENT_SONG,MODE_PRIVATE);
 
-        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        songList = SongData.ALL_SONGS;
+            currentSong=pref.getInt(CURRENT_SONG,0);
 
-        // Load the initial song
-        setSong();
+            btnPrevious = findViewById(R.id.btnPause);
+            btnPlay = findViewById(R.id.btnPlay);
+            btnNext = findViewById(R.id.btnStop);
+            songTitle = findViewById(R.id.txtTitle);
+            progressLoader = findViewById(R.id.progressLoader); // Initialize this
 
-        // 3. When audio finishes buffering: hide loader, show play icon
-        mp.setOnPreparedListener(player -> {
-            progressLoader.setVisibility(View.GONE); // Hide spinner
-            btnPlay.setIconResource(R.drawable.play_icon); // Show play icon
-            btnPlay.setEnabled(true);
+            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            songList = SongData.ALL_SONGS;
 
-            // Optional: If you want the song to automatically start playing when they hit Next/Prev
-            // uncomment the next two lines:
-            // mp.start();
-            // btnPlay.setIconResource(R.drawable.pause_icon);
-        });
-
-        btnPlay.setOnClickListener(v -> {
-            if (!mp.isPlaying()) {
-                mp.start();
-                btnPlay.setIconResource(R.drawable.pause_icon);
-            } else {
-                mp.pause();
-                btnPlay.setIconResource(R.drawable.play_icon);
-            }
-        });
-
-        btnPrevious.setOnClickListener(v -> {
-            if (currentSong > 0) {
-                this.currentSong--;
-                setSong();
-            }
-        });
-
-        btnNext.setOnClickListener(v -> {
-            this.currentSong++;
-            currentSong %= songList.size(); // Loops back to 0 if at the end
+            // Load the initial song
             setSong();
-        });
 
-        mp.setOnCompletionListener(player -> {
-            player.seekTo(0);
-            btnPlay.setIconResource(R.drawable.play_icon); // Reset icon when song ends
-        });
+            // 3. When audio finishes buffering: hide loader, show play icon
+            mp.setOnPreparedListener(player -> {
+                progressLoader.setVisibility(View.GONE); // Hide spinner
+                btnPlay.setIconResource(R.drawable.play_icon); // Show play icon
+                btnPlay.setEnabled(true);
+
+                // Optional: If you want the song to automatically start playing when they hit Next/Prev
+                // uncomment the next two lines:
+                // mp.start();
+                // btnPlay.setIconResource(R.drawable.pause_icon);
+            });
+
+            btnPlay.setOnClickListener(v -> {
+                if (!mp.isPlaying()) {
+                    mp.start();
+                    btnPlay.setIconResource(R.drawable.pause_icon);
+                } else {
+                    mp.pause();
+                    btnPlay.setIconResource(R.drawable.play_icon);
+                }
+            });
+
+            btnPrevious.setOnClickListener(v -> {
+                if (currentSong > 0) {
+                    this.currentSong--;
+                    setSong();
+                }
+            });
+
+            btnNext.setOnClickListener(v -> {
+                this.currentSong++;
+                currentSong %= songList.size(); // Loops back to 0 if at the end
+                setSong();
+            });
+
+            mp.setOnCompletionListener(player -> {
+                player.seekTo(0);
+                btnPlay.setIconResource(R.drawable.play_icon); // Reset icon when song ends
+            });
+
+
+
+        },100);
+
+
     }
 
     public void setSong() {
+        //cache the song
+        SharedPreferences pref = getSharedPreferences(CACHE_CURRENT_SONG,MODE_PRIVATE);
+        SharedPreferences.Editor editor=pref.edit();
+
+        editor.putInt(CURRENT_SONG,currentSong);
+        editor.apply();
+
         // --- SHOW LOADER STATE ---
         btnPlay.setEnabled(false); // Disable button clicks
         btnPlay.setIconResource(0); // Remove the play/pause icon entirely (0 clears it)
