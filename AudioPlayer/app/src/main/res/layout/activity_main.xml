@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="#1E1E2C"
+    tools:context=".MainActivity">
+
+    <!-- CardView gives the text container nice rounded corners and elevation -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#2A2A3D">
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Song Name"
+            android:textColor="#FFFFFF"
+            android:textSize="34sp"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:padding="16dp" />
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Spacing between image and buttons -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+    <!-- Controls Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <!-- Previous Button (Uses your btnPause ID) -->
+        <!-- Controls Container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Previous Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPause"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="16dp"
+                android:padding="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:icon="@drawable/step_backward_icon"
+                app:iconPadding="0dp"
+                app:iconGravity="textStart"
+                app:iconSize="32dp"
+                app:iconTint="#FFFFFF"
+                app:backgroundTint="#3A3A52"
+                app:cornerRadius="16dp" />
+
+            <!-- Primary Play Button (Highlighted) -->
+            <FrameLayout
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginEnd="16dp">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPlay"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginEnd="16dp"
+                    android:padding="0dp"
+                    android:insetLeft="0dp"
+                    android:insetRight="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:icon="@drawable/play_icon"
+                    app:iconPadding="0dp"
+                    app:iconGravity="textStart"
+                    app:iconSize="40dp"
+                    app:iconTint="#FFFFFF"
+                    app:backgroundTint="#FF4081"
+                    app:cornerRadius="20dp" />
+                <ProgressBar
+                    android:id="@+id/progressLoader"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="#FFFFFF"
+                    android:elevation="4dp"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- Next Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStop"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="0dp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:icon="@drawable/forward_icon"
+                app:iconPadding="0dp"
+                app:iconGravity="textStart"
+                app:iconSize="32dp"
+                app:iconTint="#FFFFFF"
+                app:backgroundTint="#3A3A52"
+                app:cornerRadius="16dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
