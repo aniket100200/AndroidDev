@@ -5,11 +5,15 @@ import static com.google.android.material.color.MaterialColors.getColor;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.audioplayer.utils.SongData;
 
@@ -55,6 +59,17 @@ public class SongList extends Fragment {
 
         listView.setOnItemClickListener((adapterView,myView,position,x)->{
             songPlayAction.setSong(position);
+
+            new Handler().postDelayed(()->{
+                try{
+                    ViewPager viewPager = requireActivity().findViewById(R.id.viewPager);
+                    if (viewPager != null) {
+                        viewPager.setCurrentItem(0, true);
+                    }
+                }   catch (Exception gt){
+                    gt.printStackTrace();
+                }
+            },300);
         });
 
 
