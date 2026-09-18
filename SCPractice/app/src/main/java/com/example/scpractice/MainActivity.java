@@ -1,5 +1,6 @@
 package com.example.scpractice;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.scpractice.enums.TypeOfWebView;
+
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private SeekBar seekBarMax;
     private TextView tvRangeLabel, tvRandomNumber, tvResult;
-    private AppCompatButton btnGenerate, btnSquare, btnCube;
+    private AppCompatButton btnGenerate, btnSquare, btnCube, btnQuiz, btnOnlineQuiz;
     private int currentRandomNumber = 0;
     private int currentMaxRange = 50; // Default value matching the XML progress
 
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         btnGenerate = findViewById(R.id.btnGenerate);
         btnSquare = findViewById(R.id.btnSquare);
         btnCube = findViewById(R.id.btnCube);
+        btnQuiz = findViewById(R.id.btnQuiz);
+        btnOnlineQuiz = findViewById(R.id.btnOnlineQuiz);
 
         // Listen for the user scrolling the SeekBar
         seekBarMax.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -62,6 +67,20 @@ public class MainActivity extends AppCompatActivity {
         btnGenerate.setOnClickListener(v -> generateRandomNumber());
         btnSquare.setOnClickListener(v -> showAnswer(true));
         btnCube.setOnClickListener(v -> showAnswer(false));
+
+        btnQuiz.setOnClickListener(v -> {
+            Intent iNext = new Intent(this, MPSCQuiz.class);
+            iNext.putExtra("title", "Home");
+            iNext.putExtra("rollNo", 10);
+            iNext.putExtra("name", "Aniket");
+            startActivity(iNext);
+        });
+
+        btnOnlineQuiz.setOnClickListener(v -> {
+            Intent iNext = new Intent(this, WebViewActivity.class);
+            iNext.putExtra("type", TypeOfWebView.ONLINE.toString());
+            startActivity(iNext);
+        });
     }
 
     private void generateRandomNumber() {
