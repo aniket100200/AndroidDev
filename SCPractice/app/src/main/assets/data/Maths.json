@@ -1,0 +1,90 @@
+
+  {
+    "subjectName": "Mathematics",
+    "topics": [
+      {
+        "topicId": "math_01",
+        "topicName": "Algebra",
+        "questions": [
+          {
+            "questionId": "q_01",
+            "questionText": "Solve for x: 2x + 5 = 15",
+            "options": [
+              "3",
+              "5",
+              "10",
+              "12"
+            ],
+            "correctAnswerIndex": 1
+          },
+          {
+            "questionId": "q_02",
+            "questionText": "What is the value of y if y / 3 = 4?",
+            "options": [
+              "7",
+              "1",
+              "12",
+              "9"
+            ],
+            "correctAnswerIndex": 2
+          }
+        ]
+      },
+      {
+        "topicId": "math_02",
+        "topicName": "Geometry",
+        "questions": [
+          {
+            "questionId": "q_03",
+            "questionText": "What is the sum of the interior angles of a triangle?",
+            "options": [
+              "90°",
+              "180°",
+              "270°",
+              "360°"
+            ],
+            "correctAnswerIndex": 1
+          },
+          {
+            "questionId": "q_04",
+            "questionText": "What is the area of a square with a side length of 5?",
+            "options": [
+              "10",
+              "15",
+              "20",
+              "25"
+            ],
+            "correctAnswerIndex": 3
+          }
+        ]
+      },
+      {
+        "topicId": "math_03",
+        "topicName": "Percentages",
+        "questions": [
+          {
+            "questionId": "q_05",
+            "questionText": "What is 15% of 200?",
+            "options": [
+              "15",
+              "20",
+              "30",
+              "45"
+            ],
+            "correctAnswerIndex": 2
+          },
+          {
+            "questionId": "q_06",
+            "questionText": "If a shirt costs $40 and is 25% off, what is the discount amount?",
+            "options": [
+              "$5",
+              "$10",
+              "$15",
+              "$30"
+            ],
+            "correctAnswerIndex": 1
+          }
+        ]
+      }
+    ]
+  }
