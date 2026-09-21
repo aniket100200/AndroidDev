@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvRangeLabel, tvRandomNumber, tvResult;
     private AppCompatButton btnGenerate, btnSquare, btnCube, btnQuiz, btnOnlineQuiz;
     private int currentRandomNumber = 0;
-    private int currentMaxRange = 50; // Default value matching the XML progress
+    private int currentMaxRange = 30; // Default value matching the XML progress
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 // Prevent the slider from going all the way down to 0
-                if (progress < 1) {
-                    progress = 1;
-                    seekBar.setProgress(1);
+                if (progress < 10) {
+                    progress = 10;
+                    seekBar.setProgress(10);
                 }
                 currentMaxRange = progress;
                 // Update the text so the user knows what range they selected
@@ -87,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
         // Generate a random number between 1 and the slider's current value
         Random random = new Random();
         currentRandomNumber = random.nextInt(currentMaxRange) + 1;
+        if (currentRandomNumber < 3) {
+            currentRandomNumber += 2;
+            currentRandomNumber %= 5;
+        }
 
         // Update UI
         tvRandomNumber.setText(String.valueOf(currentRandomNumber));

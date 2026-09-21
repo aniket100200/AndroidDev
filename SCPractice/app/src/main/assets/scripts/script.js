@@ -4,26 +4,13 @@ const subjects = [
     "Economics", "general_science", "Current_Affairs", "Computer_Science", "English"
 ];
 
-const quizData = [{
-    "subjectName": "Mathematics",
-    "topics": [
-        {
-            "topicId": "math_01",
-            "topicName": "Algebra",
-            "questions": [
-                {
-                    "questionId": "q_01",
-                    "questionText": "Solve for x: 2x + 5 = 15",
-                    "options": ["3", "5", "10", "12"],
-                    "correctAnswerIndex": 1
-                }
-            ]
-        }
-    ]
-}];
+const quizData = [];
+
+loadQuizData(); // Call the function to load quiz data
 
 // 3. Define the function
 function loadQuizData(pageId = 0) {
+    localStorage.setItem("pageId", pageId); // Store the pageId in localStorage
     const subject = subjects[pageId];
     fetch(`data/${subject}.json`)
         .then(response => response.json())
@@ -34,10 +21,13 @@ function loadQuizData(pageId = 0) {
             var topics = currData.topics;
             topics.forEach(topic => {
                 var listItem = document.createElement("li");
-                appendAnchorTag(topic.topicName, listItem);
-                listItem.setAttribute("data-topic-id", topic.topicId);
+                appendAnchorTag(topic.name, listItem);
+                listItem.setAttribute("data-topic-id", topic.id);
                 topicList.appendChild(listItem);
             });
+
+            quizData.push(data); // Store the fetched data in the quizData array
+            console.log("Quiz data loaded successfully:", quizData);
         }).catch(error => {
             console.error("Error loading quiz data:", error);
         });
@@ -45,7 +35,7 @@ function loadQuizData(pageId = 0) {
 
 function appendAnchorTag(name, listItem) {
     var anchor = document.createElement("a");
-    anchor.href = "#";
+    anchor.href = "pages/quiz_app.html";
     anchor.textContent = name;
     listItem.appendChild(anchor);
 }

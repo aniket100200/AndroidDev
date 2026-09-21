@@ -16,23 +16,23 @@
         android:text="Drag to set maximum number:"
         android:textSize="18sp" />
 
+    <!-- This is the "scrolling" slider. Max is set to 100. -->
     <TextView
         android:id="@+id/tvRangeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="Current Range: 1 to 50"
+        android:text="Current Range: 1 to 30"
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <!-- This is the "scrolling" slider. Max is set to 100. -->
     <SeekBar
         android:id="@+id/seekBarMax"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:max="100"
-        android:progress="50" />
+        android:max="50"
+        android:progress="30" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGenerate"
