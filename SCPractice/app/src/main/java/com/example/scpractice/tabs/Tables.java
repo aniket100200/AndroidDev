@@ -3,6 +3,10 @@ package com.example.scpractice.tabs;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.scpractice.R;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -23,6 +26,11 @@ import java.util.Random;
 public class Tables extends Fragment {
 
     private final Random random = new Random();
+    /*
+     * Handler is used to wait for the user to finish typing
+     * before deciding that the answer is incorrect.
+     */
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private TextInputLayout tilStartTable;
     private TextInputLayout tilEndTable;
     private TextInputLayout tilAnswer;
@@ -31,13 +39,9 @@ public class Tables extends Fragment {
     private TextInputEditText etAnswer;
     private TextView tvQuestion;
     private TextView tvFeedback;
-    private MaterialButton btnSubmit;
-    private MaterialButton btnNext;
     private int firstNumber;
     private int secondNumber;
     private int correctAnswer;
-
-    private boolean answerSubmitted = false;
 
     @Nullable
     @Override
@@ -55,11 +59,15 @@ public class Tables extends Fragment {
         initializeViews(view);
         setupListeners();
 
-        // Generate the first question.
         generateQuestion();
 
         return view;
-    }
+    }    private final Runnable checkAnswerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            checkAnswerAutomatically();
+        }
+    };
 
     private void initializeViews(View view) {
 
@@ -73,40 +81,87 @@ public class Tables extends Fragment {
 
         tvQuestion = view.findViewById(R.id.tvQuestion);
         tvFeedback = view.findViewById(R.id.tvFeedback);
-
-        btnSubmit = view.findViewById(R.id.btnSubmit);
-        btnNext = view.findViewById(R.id.btnNext);
     }
 
     private void setupListeners() {
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkAnswer();
-            }
-        });
+        /*
+         * Automatically check the answer whenever
+         * the user changes the text.
+         */
+        etAnswer.addTextChangedListener(new TextWatcher() {
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                generateQuestion();
+            public void beforeTextChanged(
+                    CharSequence s,
+                    int start,
+                    int count,
+                    int after) {
+            }
+
+            @Override
+            public void onTextChanged(
+                    CharSequence s,
+                    int start,
+                    int before,
+                    int count) {
+
+                // Remove previous pending check.
+                handler.removeCallbacks(checkAnswerRunnable);
+
+                // Clear previous error.
+                tilAnswer.setError(null);
+
+                String answer = s.toString().trim();
+
+                if (answer.isEmpty()) {
+                    tvFeedback.setText("");
+                    tvFeedback.setVisibility(View.GONE);
+                    return;
+                }
+
+                /*
+                 * If the answer is exactly correct,
+                 * show Correct immediately.
+                 */
+                try {
+
+                    int userAnswer = Integer.parseInt(answer);
+
+                    if (userAnswer == correctAnswer) {
+
+                        showCorrect();
+
+                        return;
+                    }
+
+                } catch (NumberFormatException e) {
+
+                    tilAnswer.setError("Enter a valid number");
+
+                    return;
+                }
+
+                /*
+                 * Don't immediately mark a partially typed answer
+                 * as incorrect.
+                 *
+                 * Wait 700ms after the user stops typing.
+                 */
+                handler.postDelayed(
+                        checkAnswerRunnable,
+                        700
+                );
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
     }
 
     /**
      * Generates a random multiplication question.
-     * <p>
-     * Example:
-     * Start = 12
-     * End = 20
-     * <p>
-     * First number -> random number between 12 and 20
-     * Second number -> random number between 1 and 10
-     * <p>
-     * Example result:
-     * 19 × 7 = ?
      */
     private void generateQuestion() {
 
@@ -122,13 +177,10 @@ public class Tables extends Fragment {
                 etEndTable.getText().toString().trim()
         );
 
-        // Inclusive random number:
-        // random.nextInt(max - min + 1) + min
         firstNumber = random.nextInt(
                 endTable - startTable + 1
         ) + startTable;
 
-        // Second number is always between 1 and 10 inclusive.
         secondNumber = random.nextInt(10) + 1;
 
         correctAnswer = firstNumber * secondNumber;
@@ -137,24 +189,22 @@ public class Tables extends Fragment {
                 firstNumber + " × " + secondNumber + " = ?"
         );
 
-        // Reset answer field.
+        /*
+         * Reset answer.
+         */
         etAnswer.setText("");
-
-        // Reset feedback.
-        tvFeedback.setText("");
-        tvFeedback.setVisibility(View.GONE);
 
         tilAnswer.setError(null);
 
-        // Submit is available for the new question.
-        btnSubmit.setEnabled(true);
+        /*
+         * Reset feedback.
+         */
+        tvFeedback.setText("");
+        tvFeedback.setVisibility(View.GONE);
 
-        // Next remains disabled until answer is submitted.
-        btnNext.setEnabled(false);
-
-        answerSubmitted = false;
-
-        // Focus answer field.
+        /*
+         * Focus answer field.
+         */
         etAnswer.requestFocus();
 
         showKeyboard();
@@ -177,12 +227,20 @@ public class Tables extends Fragment {
                 : etEndTable.getText().toString().trim();
 
         if (startText.isEmpty()) {
-            tilStartTable.setError("Enter start table");
+
+            tilStartTable.setError(
+                    "Enter start table"
+            );
+
             return false;
         }
 
         if (endText.isEmpty()) {
-            tilEndTable.setError("Enter end table");
+
+            tilEndTable.setError(
+                    "Enter end table"
+            );
+
             return false;
         }
 
@@ -190,26 +248,47 @@ public class Tables extends Fragment {
         int endTable;
 
         try {
+
             startTable = Integer.parseInt(startText);
             endTable = Integer.parseInt(endText);
+
         } catch (NumberFormatException e) {
-            tilStartTable.setError("Enter a valid number");
-            tilEndTable.setError("Enter a valid number");
+
+            tilStartTable.setError(
+                    "Enter a valid number"
+            );
+
+            tilEndTable.setError(
+                    "Enter a valid number"
+            );
+
             return false;
         }
 
         if (startTable <= 0) {
-            tilStartTable.setError("Must be greater than 0");
+
+            tilStartTable.setError(
+                    "Must be greater than 0"
+            );
+
             return false;
         }
 
         if (endTable <= 0) {
-            tilEndTable.setError("Must be greater than 0");
+
+            tilEndTable.setError(
+                    "Must be greater than 0"
+            );
+
             return false;
         }
 
         if (startTable > endTable) {
-            tilStartTable.setError("Start must be ≤ End");
+
+            tilStartTable.setError(
+                    "Start must be ≤ End"
+            );
+
             return false;
         }
 
@@ -217,60 +296,110 @@ public class Tables extends Fragment {
     }
 
     /**
-     * Checks the user's multiplication answer.
+     * Checks the answer after the user has stopped typing.
      */
-    private void checkAnswer() {
-
-        tilAnswer.setError(null);
+    private void checkAnswerAutomatically() {
 
         String answerText = etAnswer.getText() == null
                 ? ""
                 : etAnswer.getText().toString().trim();
 
         if (answerText.isEmpty()) {
-            tilAnswer.setError("Please enter your answer");
-            etAnswer.requestFocus();
             return;
         }
 
         int userAnswer;
 
         try {
+
             userAnswer = Integer.parseInt(answerText);
+
         } catch (NumberFormatException e) {
-            tilAnswer.setError("Enter a valid number");
+
+            tilAnswer.setError(
+                    "Enter a valid number"
+            );
+
             return;
         }
 
-        hideKeyboard();
-
         if (userAnswer == correctAnswer) {
 
-            tvFeedback.setText("Correct! 🎉");
-            tvFeedback.setTextColor(
-                    Color.rgb(46, 125, 50)
-            );
+            showCorrect();
 
         } else {
 
-            tvFeedback.setText(
-                    "Incorrect, the answer is " + correctAnswer
-            );
-
-            tvFeedback.setTextColor(
-                    Color.rgb(198, 40, 40)
-            );
+            showIncorrect();
         }
+    }
 
-        tvFeedback.setVisibility(View.VISIBLE);
+    /**
+     * Displays correct feedback and automatically
+     * generates the next question.
+     */
+    private void showCorrect() {
 
-        // Prevent multiple submissions for the same question.
-        btnSubmit.setEnabled(false);
+        handler.removeCallbacks(checkAnswerRunnable);
 
-        // Allow the user to move to the next question.
-        btnNext.setEnabled(true);
+        tvFeedback.setText(
+                "Correct! 🎉"
+        );
 
-        answerSubmitted = true;
+        tvFeedback.setTextColor(
+                Color.rgb(46, 125, 50)
+        );
+
+        tvFeedback.setVisibility(
+                View.VISIBLE
+        );
+
+        /*
+         * Wait briefly so the user can see
+         * the "Correct!" message.
+         */
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if (isAdded() && getView() != null) {
+                    generateQuestion();
+                }
+
+            }
+        }, 800);
+    }
+
+    /**
+     * Displays incorrect feedback.
+     */
+    private void showIncorrect() {
+
+        tvFeedback.setText(
+                "Incorrect, the answer is " + correctAnswer
+        );
+
+        tvFeedback.setTextColor(
+                Color.rgb(198, 40, 40)
+        );
+
+        tvFeedback.setVisibility(
+                View.VISIBLE
+        );
+
+        /*
+         * Automatically generate a new question
+         * after showing the correct answer.
+         */
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if (isAdded() && getView() != null) {
+                    generateQuestion();
+                }
+
+            }
+        }, 1200);
     }
 
     /**
@@ -291,11 +420,13 @@ public class Tables extends Fragment {
                 if (context != null) {
 
                     InputMethodManager imm =
-                            (InputMethodManager) context.getSystemService(
-                                    Context.INPUT_METHOD_SERVICE
-                            );
+                            (InputMethodManager)
+                                    context.getSystemService(
+                                            Context.INPUT_METHOD_SERVICE
+                                    );
 
                     if (imm != null) {
+
                         imm.showSoftInput(
                                 etAnswer,
                                 InputMethodManager.SHOW_IMPLICIT
@@ -308,7 +439,7 @@ public class Tables extends Fragment {
     }
 
     /**
-     * Hides the keyboard after submitting the answer.
+     * Hides the keyboard.
      */
     private void hideKeyboard() {
 
@@ -317,11 +448,13 @@ public class Tables extends Fragment {
         }
 
         InputMethodManager imm =
-                (InputMethodManager) getContext().getSystemService(
-                        Context.INPUT_METHOD_SERVICE
-                );
+                (InputMethodManager)
+                        getContext().getSystemService(
+                                Context.INPUT_METHOD_SERVICE
+                        );
 
         if (imm != null) {
+
             imm.hideSoftInputFromWindow(
                     etAnswer.getWindowToken(),
                     0
@@ -333,6 +466,9 @@ public class Tables extends Fragment {
 
     @Override
     public void onDestroyView() {
+
+        handler.removeCallbacksAndMessages(null);
+
         super.onDestroyView();
 
         tilStartTable = null;
@@ -345,8 +481,7 @@ public class Tables extends Fragment {
 
         tvQuestion = null;
         tvFeedback = null;
-
-        btnSubmit = null;
-        btnNext = null;
     }
+
+
 }

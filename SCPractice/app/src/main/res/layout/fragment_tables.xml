@@ -194,29 +194,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvFeedback">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSubmit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Submit"
-            android:textSize="16sp"
-            app:cornerRadius="12dp" />
+        <!--        <com.google.android.material.button.MaterialButton-->
+        <!--            android:id="@+id/btnSubmit"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:text="Submit"-->
+        <!--            android:textSize="16sp"-->
+        <!--            app:cornerRadius="12dp" />-->
 
-        <Space
-            android:layout_width="12dp"
-            android:layout_height="1dp" />
+        <!--        <Space-->
+        <!--            android:layout_width="12dp"-->
+        <!--            android:layout_height="1dp" />-->
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnNext"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:enabled="false"
-            android:text="Next"
-            android:textSize="16sp"
-            app:cornerRadius="12dp" />
+        <!--        <com.google.android.material.button.MaterialButton-->
+        <!--            android:id="@+id/btnNext"-->
+        <!--            style="@style/Widget.Material3.Button.OutlinedButton"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_weight="1"-->
+        <!--            android:enabled="false"-->
+        <!--            android:text="Next"-->
+        <!--            android:textSize="16sp"-->
+        <!--            app:cornerRadius="12dp" />-->
 
     </LinearLayout>
 
