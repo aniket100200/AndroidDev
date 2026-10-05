@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
+import com.example.scpractice.MainActivity;
 import com.example.scpractice.R;
 
 import java.util.Random;
@@ -126,6 +127,18 @@ public class SquareCube extends Fragment {
             public void onFinish() {
                 // This runs exactly when the timer hits 0
                 tvResult.setText("The " + label + " is: " + answer);
+                if (getActivity() instanceof MainActivity) {
+
+                    MainActivity activity = (MainActivity) getActivity();
+
+                    if (label.equals("Cube")) {
+                        activity.speakMessage(currentRandomNumber + " Cha Ghana " + answer);
+                    } else {
+                        activity.speakMessage(currentRandomNumber + " Cha Varg " + answer);
+                    }
+
+                }
+
 
                 // Re-enable buttons for the next round
                 btnSquare.setEnabled(true);

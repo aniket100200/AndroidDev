@@ -1,10 +1,13 @@
 package com.example.scpractice.tabs;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -12,15 +15,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.scpractice.MainActivity;
 import com.example.scpractice.R;
+import com.example.scpractice.Utils.MarathiUtils;
+import com.example.scpractice.enums.Language;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Tables extends Fragment {
@@ -43,6 +55,36 @@ public class Tables extends Fragment {
     private int secondNumber;
     private int correctAnswer;
 
+    private ActivityResultLauncher<Intent> speechRecognizerLauncher;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        speechRecognizerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                            ArrayList<String> matches = result.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                            if (matches != null && !matches.isEmpty()) {
+                                String spokenText = matches.get(0);
+                                // Try to extract digits from spoken text
+                                String numberOnly = spokenText.replaceAll("[^0-9]", "");
+                                if (!numberOnly.isEmpty()) {
+                                    etAnswer.setText(numberOnly);
+                                    // TextWatcher will automatically check it
+                                } else {
+                                    Toast.makeText(getContext(), "Could not recognize a number: " + spokenText, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
     @Nullable
     @Override
     public View onCreateView(
@@ -62,12 +104,7 @@ public class Tables extends Fragment {
         generateQuestion();
 
         return view;
-    }    private final Runnable checkAnswerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            checkAnswerAutomatically();
-        }
-    };
+    }
 
     private void initializeViews(View view) {
 
@@ -81,6 +118,20 @@ public class Tables extends Fragment {
 
         tvQuestion = view.findViewById(R.id.tvQuestion);
         tvFeedback = view.findViewById(R.id.tvFeedback);
+
+        tilAnswer.setEndIconOnClickListener(v -> launchSpeechRecognizer());
+    }
+
+    private void launchSpeechRecognizer() {
+//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "mr-IN");
+//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak the answer...");
+//        try {
+//            speechRecognizerLauncher.launch(intent);
+//        } catch (Exception e) {
+//            Toast.makeText(getContext(), "Speech Recognition not available", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     private void setupListeners() {
@@ -182,8 +233,20 @@ public class Tables extends Fragment {
         ) + startTable;
 
         secondNumber = random.nextInt(10) + 1;
+        if (secondNumber < 5) secondNumber += 5;
+
 
         correctAnswer = firstNumber * secondNumber;
+        String localMarathi = MarathiUtils.getPronunciation(Language.MARATHI, secondNumber);
+
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).speakMessage(firstNumber + localMarathi, () -> {
+                if (isAdded() && getContext() != null) {
+                    launchSpeechRecognizer();
+                }
+            });
+        }
 
         tvQuestion.setText(
                 firstNumber + " × " + secondNumber + " = ?"
@@ -345,6 +408,10 @@ public class Tables extends Fragment {
                 "Correct! 🎉"
         );
 
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).speakMessage("Barobar");
+        }
+
         tvFeedback.setTextColor(
                 Color.rgb(46, 125, 50)
         );
@@ -377,6 +444,10 @@ public class Tables extends Fragment {
         tvFeedback.setText(
                 "Incorrect, the answer is " + correctAnswer
         );
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).speakMessage("Chook");
+        }
 
         tvFeedback.setTextColor(
                 Color.rgb(198, 40, 40)
@@ -482,6 +553,13 @@ public class Tables extends Fragment {
         tvQuestion = null;
         tvFeedback = null;
     }
+
+    private final Runnable checkAnswerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            checkAnswerAutomatically();
+        }
+    };
 
 
 }
