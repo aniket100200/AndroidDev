@@ -22,6 +22,10 @@ public class TextToSpeechListener implements TextToSpeech.OnInitListener {
     private Runnable onDoneCallback;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
+    private String pendingText = null;
+    private Runnable pendingOnDone = null;
+    private int pendingQueueMode = TextToSpeech.QUEUE_FLUSH;
+
     public TextToSpeechListener(Context context) {
         this(context, MARATHI, null);
     }
@@ -109,6 +113,7 @@ public class TextToSpeechListener implements TextToSpeech.OnInitListener {
                 if (fallbackResult != TextToSpeech.LANG_MISSING_DATA && fallbackResult != TextToSpeech.LANG_NOT_SUPPORTED) {
                     isReady = true;
                     if (callback != null) callback.onSuccess();
+                    flushPendingSpeech();
                     return true;
                 }
             }
@@ -123,7 +128,21 @@ public class TextToSpeechListener implements TextToSpeech.OnInitListener {
             if (callback != null) {
                 callback.onSuccess();
             }
+            flushPendingSpeech();
             return true;
+        }
+    }
+
+    private void flushPendingSpeech() {
+        if (pendingText != null) {
+            String text = pendingText;
+            Runnable done = pendingOnDone;
+            int mode = pendingQueueMode;
+
+            pendingText = null;
+            pendingOnDone = null;
+
+            speak(text, mode, done);
         }
     }
 
@@ -144,10 +163,10 @@ public class TextToSpeechListener implements TextToSpeech.OnInitListener {
             this.onDoneCallback = onDone;
             textToSpeech.speak(text, queueMode, null, "TTS_ID_" + System.currentTimeMillis());
         } else {
-            Log.w(TAG, "TTS is not ready yet.");
-            if (onDone != null) {
-                mainHandler.post(onDone); // Fire callback so we don't block
-            }
+            Log.w(TAG, "TTS is not ready yet. Queuing message.");
+            this.pendingText = text;
+            this.pendingQueueMode = queueMode;
+            this.pendingOnDone = onDone;
         }
     }
 
