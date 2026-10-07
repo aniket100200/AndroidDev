@@ -95,9 +95,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(iNext);
         });
 
-        speakMessage("Hello Bhava Ks Kay Chaalay");
-
-
     }
 
     private void checkAndRequestPermissions() {

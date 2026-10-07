@@ -32,6 +32,7 @@ import com.example.scpractice.MainActivity;
 import com.example.scpractice.R;
 import com.example.scpractice.Utils.MarathiUtils;
 import com.example.scpractice.enums.Language;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -55,6 +56,7 @@ public class Tables extends Fragment {
     private TextInputEditText etAnswer;
     private TextView tvQuestion;
     private TextView tvFeedback;
+    private MaterialSwitch btnToggle;
     private int firstNumber;
     private int secondNumber;
     private int correctAnswer;
@@ -201,6 +203,7 @@ public class Tables extends Fragment {
 
         tvQuestion = view.findViewById(R.id.tvQuestion);
         tvFeedback = view.findViewById(R.id.tvFeedback);
+        btnToggle = view.findViewById(R.id.btnToggle);
 
         tilAnswer.setEndIconOnClickListener(v -> startSilentListening());
     }
@@ -344,9 +347,9 @@ public class Tables extends Fragment {
         String localMarathi = MarathiUtils.getPronunciation(Language.MARATHI, secondNumber);
 
 
-        if (getActivity() instanceof MainActivity) {
+        if ((btnToggle == null || btnToggle.isChecked()) && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).speakMessage(firstNumber + localMarathi, () -> {
-                if (isAdded() && getContext() != null) {
+                if (isAdded() && getContext() != null && (btnToggle == null || btnToggle.isChecked())) {
                     startSilentListening();
                 }
             });
@@ -512,7 +515,7 @@ public class Tables extends Fragment {
                 "Correct! 🎉"
         );
 
-        if (getActivity() instanceof MainActivity) {
+        if ((btnToggle == null || btnToggle.isChecked()) && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).speakMessage("Barobar");
         }
 
@@ -549,7 +552,7 @@ public class Tables extends Fragment {
                 "Incorrect, the answer is " + correctAnswer
         );
 
-        if (getActivity() instanceof MainActivity) {
+        if ((btnToggle == null || btnToggle.isChecked()) && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).speakMessage("Chook");
         }
 
