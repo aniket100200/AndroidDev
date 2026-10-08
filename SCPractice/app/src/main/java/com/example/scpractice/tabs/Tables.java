@@ -1,13 +1,16 @@
 package com.example.scpractice.tabs;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,18 +20,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.scpractice.MainActivity;
 import com.example.scpractice.R;
 import com.example.scpractice.Utils.MarathiUtils;
 import com.example.scpractice.enums.Language;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -43,6 +47,7 @@ public class Tables extends Fragment {
      * before deciding that the answer is incorrect.
      */
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private TextInputLayout tilStartTable;
     private TextInputLayout tilEndTable;
     private TextInputLayout tilAnswer;
@@ -51,38 +56,118 @@ public class Tables extends Fragment {
     private TextInputEditText etAnswer;
     private TextView tvQuestion;
     private TextView tvFeedback;
+    private MaterialSwitch btnToggle;
     private int firstNumber;
     private int secondNumber;
     private int correctAnswer;
-
-    private ActivityResultLauncher<Intent> speechRecognizerLauncher;
+    private SpeechRecognizer speechRecognizer;
+    private Intent speechRecognizerIntent;
+    private ActivityResultLauncher<String> requestPermissionLauncher;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        speechRecognizerLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                            ArrayList<String> matches = result.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                            if (matches != null && !matches.isEmpty()) {
-                                String spokenText = matches.get(0);
-                                // Try to extract digits from spoken text
-                                String numberOnly = spokenText.replaceAll("[^0-9]", "");
-                                if (!numberOnly.isEmpty()) {
-                                    etAnswer.setText(numberOnly);
-                                    // TextWatcher will automatically check it
-                                } else {
-                                    Toast.makeText(getContext(), "Could not recognize a number: " + spokenText, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
+        requestPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        setupSpeechRecognizer();
+                        startSilentListening();
+                    } else {
+                        Toast.makeText(getContext(), "You can type your answer in the box instead.", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
+    }
+
+    private void setupSpeechRecognizer() {
+        if (SpeechRecognizer.isRecognitionAvailable(requireContext())) {
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(requireContext());
+            speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "mr-IN");
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+
+            speechRecognizer.setRecognitionListener(new RecognitionListener() {
+                @Override
+                public void onReadyForSpeech(Bundle params) {
+                    mainHandler.post(() -> {
+                        tvFeedback.setText("Listening for your answer...");
+                        tvFeedback.setTextColor(Color.GRAY);
+                        tvFeedback.setVisibility(View.VISIBLE);
+                    });
+                }
+
+                @Override
+                public void onBeginningOfSpeech() {
+                }
+
+                @Override
+                public void onRmsChanged(float rmsdB) {
+                }
+
+                @Override
+                public void onBufferReceived(byte[] buffer) {
+                }
+
+                @Override
+                public void onEndOfSpeech() {
+                }
+
+                @Override
+                public void onError(int error) {
+                    mainHandler.post(() -> {
+                        if (tvFeedback != null && tvFeedback.getText().toString().startsWith("Listening")) {
+                            tvFeedback.setVisibility(View.GONE);
+                        }
+                    });
+                }
+
+                @Override
+                public void onResults(Bundle results) {
+                    processSpeechResults(results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION));
+                }
+
+                @Override
+                public void onPartialResults(Bundle partialResults) {
+                    ArrayList<String> matches = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                    if (matches != null && !matches.isEmpty()) {
+                        String partialText = matches.get(0);
+                        mainHandler.post(() -> {
+                            tvFeedback.setText("Listening... \"" + partialText + "\"");
+                            tvFeedback.setTextColor(Color.GRAY);
+                            tvFeedback.setVisibility(View.VISIBLE);
+                        });
+                        processSpeechResults(matches);
+                    }
+                }
+
+                @Override
+                public void onEvent(int eventType, Bundle params) {
+                }
+            });
+        }
+    }
+
+    private void processSpeechResults(ArrayList<String> matches) {
+        if (matches != null && !matches.isEmpty()) {
+            String spokenText = matches.get(0);
+            String numberOnly = spokenText.replaceAll("[^0-9]", "");
+            if (!numberOnly.isEmpty()) {
+                etAnswer.setText(numberOnly);
+                // We stop listening once a number is found so it checks it immediately
+                if (speechRecognizer != null) {
+                    speechRecognizer.stopListening();
+                }
+            } else {
+                mainHandler.post(() -> {
+                    tvFeedback.setText("Listening... \"" + spokenText + "\"");
+                    tvFeedback.setTextColor(Color.GRAY);
+                    tvFeedback.setVisibility(View.VISIBLE);
+                });
+            }
+        }
     }
 
     @Nullable
@@ -118,21 +203,43 @@ public class Tables extends Fragment {
 
         tvQuestion = view.findViewById(R.id.tvQuestion);
         tvFeedback = view.findViewById(R.id.tvFeedback);
+        btnToggle = view.findViewById(R.id.btnToggle);
 
-        tilAnswer.setEndIconOnClickListener(v -> launchSpeechRecognizer());
+        tilAnswer.setEndIconOnClickListener(v -> startSilentListening());
     }
 
-    private void launchSpeechRecognizer() {
-//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "mr-IN");
-//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak the answer...");
-//        try {
-//            speechRecognizerLauncher.launch(intent);
-//        } catch (Exception e) {
-//            Toast.makeText(getContext(), "Speech Recognition not available", Toast.LENGTH_SHORT).show();
-//        }
+    private void startSilentListening() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            // Check if we should show a rationale dialog
+            if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
+                new AlertDialog.Builder(requireContext())
+                        .setTitle("Microphone Permission")
+                        .setMessage("If you would like to answer using your voice, please grant microphone permission. Otherwise, you can just type your answer in the text box.")
+                        .setPositiveButton("Grant", (dialog, which) -> {
+                            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+                        })
+                        .setNegativeButton("No, I'll Type", (dialog, which) -> {
+                            // User opted out, do nothing, they will type
+                            dialog.dismiss();
+                        })
+                        .show();
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+            }
+            return;
+        }
+
+        if (speechRecognizer == null) {
+            setupSpeechRecognizer();
+        }
+
+        if (speechRecognizer != null && speechRecognizerIntent != null) {
+            mainHandler.post(() -> {
+                speechRecognizer.startListening(speechRecognizerIntent);
+            });
+        }
     }
+
 
     private void setupListeners() {
 
@@ -240,10 +347,10 @@ public class Tables extends Fragment {
         String localMarathi = MarathiUtils.getPronunciation(Language.MARATHI, secondNumber);
 
 
-        if (getActivity() instanceof MainActivity) {
+        if ((btnToggle == null || btnToggle.isChecked()) && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).speakMessage(firstNumber + localMarathi, () -> {
-                if (isAdded() && getContext() != null) {
-                    launchSpeechRecognizer();
+                if (isAdded() && getContext() != null && (btnToggle == null || btnToggle.isChecked())) {
+                    startSilentListening();
                 }
             });
         }
@@ -408,7 +515,7 @@ public class Tables extends Fragment {
                 "Correct! 🎉"
         );
 
-        if (getActivity() instanceof MainActivity) {
+        if ((btnToggle == null || btnToggle.isChecked()) && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).speakMessage("Barobar");
         }
 
@@ -445,7 +552,7 @@ public class Tables extends Fragment {
                 "Incorrect, the answer is " + correctAnswer
         );
 
-        if (getActivity() instanceof MainActivity) {
+        if ((btnToggle == null || btnToggle.isChecked()) && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).speakMessage("Chook");
         }
 
@@ -537,8 +644,13 @@ public class Tables extends Fragment {
 
     @Override
     public void onDestroyView() {
-
         handler.removeCallbacksAndMessages(null);
+        mainHandler.removeCallbacksAndMessages(null);
+
+        if (speechRecognizer != null) {
+            speechRecognizer.destroy();
+            speechRecognizer = null;
+        }
 
         super.onDestroyView();
 
