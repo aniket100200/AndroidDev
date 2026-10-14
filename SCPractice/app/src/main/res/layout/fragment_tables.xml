@@ -17,10 +17,18 @@
         android:text="Multiplication Table Quiz"
         android:textAlignment="center"
         android:textColor="?attr/colorOnSurface"
-        android:textSize="26sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnToggle"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/btnToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -151,9 +159,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="Your Answer"
-        app:endIconMode="custom"
-        app:endIconDrawable="@android:drawable/ic_btn_speak_now"
-        app:endIconContentDescription="Speak Answer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/questionCard"

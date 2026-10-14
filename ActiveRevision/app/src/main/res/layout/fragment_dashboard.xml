@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Revision Dashboard"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_dashboard_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Active recall scheduling &amp; progress"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp" />
+
+        <!-- Top Metrics Cards Grid -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:columnCount="2"
+            android:rowCount="2">
+
+            <!-- Due Today Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Due Today"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_metric_due_today"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="0"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Overdue Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Overdue"
+                        android:textColor="#C62828"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_metric_overdue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="0"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Upcoming Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Upcoming"
+                        android:textColor="#0277BD"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_metric_upcoming"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="0"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Completion Rate / Score Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Avg Recall Score"
+                        android:textColor="#2E7D32"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_metric_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="N/A"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </GridLayout>
+
+        <!-- Due / Overdue Section Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Due &amp; Overdue Tasks"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_due_tasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+            <TextView
+                android:id="@+id/tv_empty_dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="32dp"
+                android:text="All caught up!\nNo revisions due right now 🎉"
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

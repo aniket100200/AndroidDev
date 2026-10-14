@@ -46,7 +46,7 @@ public class MarathiUtils implements LanguageUtils {
                         break;
                     }
                     case 9: {
-                        local = "Nahu";
+                        local = "Nauuuu";
                         break;
                     }
                     case 10: {

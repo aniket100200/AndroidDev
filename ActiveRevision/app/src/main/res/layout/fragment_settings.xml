@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings &amp; Info"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <!-- Notification Preferences Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Notifications &amp; Reminders"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switch_notifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:checked="true"
+                    android:text="Enable Revision Reminders" />
+
+                <TextView
+                    android:id="@+id/tv_permission_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="13sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_request_permission"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Grant Notification Permission"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Grace Period Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Grace Period for Overdue Tasks"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Tasks past due beyond the grace period will automatically transition to MISSED status."
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="13sp" />
+
+                <RadioGroup
+                    android:id="@+id/rg_grace_period"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_12h"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="12 Hours" />
+
+                    <RadioButton
+                        android:id="@+id/rb_24h"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="24 Hours" />
+
+                    <RadioButton
+                        android:id="@+id/rb_48h"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="48 Hours" />
+                </RadioGroup>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Offline Privacy Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="100% Offline &amp; Private"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_app_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="This application stores all subjects, topics, study sessions, and active recall history locally in a SQLite database on your device. No cloud sync, accounts, internet permissions, or remote servers are used."
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
