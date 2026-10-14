@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.example.activerevision.ui.dashboard.DashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/subjectsFragment"
+        android:name="com.example.activerevision.ui.subjects.SubjectsFragment"
+        android:label="Subjects"
+        tools:layout="@layout/fragment_subjects" />
+
+    <fragment
+        android:id="@+id/topicsFragment"
+        android:name="com.example.activerevision.ui.topics.TopicsFragment"
+        android:label="Topics"
+        tools:layout="@layout/fragment_topics">
+        <argument
+            android:name="subjectId"
+            app:argType="long" />
+        <argument
+            android:name="subjectName"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/topicDetailFragment"
+        android:name="com.example.activerevision.ui.topics.TopicDetailFragment"
+        android:label="Topic Details"
+        tools:layout="@layout/fragment_topic_detail">
+        <argument
+            android:name="topicId"
+            app:argType="long" />
+        <argument
+            android:name="subjectId"
+            app:argType="long" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/recordStudySessionDialogFragment"
+        android:name="com.example.activerevision.ui.study.RecordStudySessionDialogFragment"
+        android:label="Record Study Session"
+        tools:layout="@layout/dialog_record_study_session">
+        <argument
+            android:name="topicId"
+            app:argType="long" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/activeRecallFragment"
+        android:name="com.example.activerevision.ui.recall.ActiveRecallFragment"
+        android:label="Active Recall"
+        tools:layout="@layout/fragment_active_recall">
+        <argument
+            android:name="taskId"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/revisionHistoryFragment"
+        android:name="com.example.activerevision.ui.history.RevisionHistoryFragment"
+        android:label="Revision History"
+        tools:layout="@layout/fragment_revision_history" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.activerevision.ui.settings.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+
+</navigation>
